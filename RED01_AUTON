@@ -29,6 +29,7 @@ vex::competition    Competition;
 /*---------------------------------------------------------------------------*/
     //Use these variables to set the speed of the arm and claw.
     int armSpeedPCT = 50;
+    //int autonMotorSpeed = 60;
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -49,6 +50,14 @@ void driveMotorsStop(){
     LeftMotorF.stop();
     LeftMotorB.stop();
 }
+
+void autonMotorSpeed(int autonMotorSpeed ){
+    RightMotorF.setVelocity(autonMotorSpeed,velocityUnits::rpm);
+    RightMotorB.setVelocity(autonMotorSpeed,velocityUnits::rpm);
+    LeftMotorF.setVelocity(autonMotorSpeed,velocityUnits::rpm);
+    LeftMotorB.setVelocity(autonMotorSpeed,velocityUnits::rpm);
+}
+    
 
 void driverDriveControl(){
      /** 
@@ -127,33 +136,62 @@ void pre_auton( void ) {
 void autonomous( void ) {
     //**Position RED 01**
     
+     //Display that the program has started to the screen.
+     Brain.Screen.print("650N Autonomous Program RED01 Has Started");
+    
+    //set auton motor speed
+    autonMotorSpeed(80);
+    
     //drive forward to hit red bottom flag
-    RightMotorF.startRotateFor(4.0,rotationUnits::rev);
-    RightMotorB.startRotateFor(4.0,rotationUnits::rev);
-    LeftMotorF.startRotateFor(4.0,rotationUnits::rev);
-    LeftMotorB.startRotateFor(4.0,rotationUnits::rev);
-    
-    //stop
-    driveMotorsStop();
-    
-    //backup even to platform
     RightMotorF.startRotateFor(-4.0,rotationUnits::rev);
     RightMotorB.startRotateFor(-4.0,rotationUnits::rev);
-    LeftMotorF.startRotateFor(-4.0,rotationUnits::rev);
-    LeftMotorB.startRotateFor(-4.0,rotationUnits::rev);
+    LeftMotorF.startRotateFor(4.0,rotationUnits::rev);
+    LeftMotorB.startRotateFor(4.0,rotationUnits::rev);
+    while(RightMotorF.isSpinning()||RightMotorB.isSpinning()||LeftMotorF.isSpinning()||LeftMotorB.isSpinning())
+    {}
     
     //stop
     driveMotorsStop();
+    vex::task::sleep(700);
+    
+    //backup even to platform
+    RightMotorF.startRotateFor(5.8,rotationUnits::rev);
+    RightMotorB.startRotateFor(5.8,rotationUnits::rev);
+    LeftMotorF.startRotateFor(-5.8,rotationUnits::rev);
+    LeftMotorB.startRotateFor(-5.8,rotationUnits::rev);
+    while(RightMotorF.isSpinning()||RightMotorB.isSpinning()||LeftMotorF.isSpinning()||LeftMotorB.isSpinning())
+    {}
+    
+    //stop
+    driveMotorsStop();
+    vex::task::sleep(700);
     
     //turn right
+    RightMotorF.startRotateFor(2.0,rotationUnits::rev);
+    RightMotorB.startRotateFor(2.0,rotationUnits::rev);
+    LeftMotorF.startRotateFor(2.0,rotationUnits::rev);
+    LeftMotorB.startRotateFor(2.0,rotationUnits::rev);
+    while(RightMotorF.isSpinning()||RightMotorB.isSpinning()||LeftMotorF.isSpinning()||LeftMotorB.isSpinning())
+    {}
     
     //stop
     driveMotorsStop();
+    vex::task::sleep(700);
+    
+    //Reset motor velocity
+    autonMotorSpeed(100);
     
     //go forward upon Red Alliance Platform
+    RightMotorF.startRotateFor(-4.0,rotationUnits::rev);
+    RightMotorB.startRotateFor(-4.0,rotationUnits::rev);
+    LeftMotorF.startRotateFor(4.0,rotationUnits::rev);
+    LeftMotorB.startRotateFor(4.0,rotationUnits::rev);
+    while(RightMotorF.isSpinning()||RightMotorB.isSpinning()||LeftMotorF.isSpinning()||LeftMotorB.isSpinning())
+    {}
     
     //stop
     driveMotorsStop();
+    vex::task::sleep(2000);
 }
 
 /*----------------------------------------------------------------------------*/
